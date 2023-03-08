@@ -27,7 +27,19 @@ import "./Board.css";
  *
  **/
 
-function Board({ nrows, ncols, chanceLightStartsOn }) {
+interface BoardPropsInterface {
+  nrows: number;
+  ncols: number;
+  chanceLightStartsOn: number;
+}
+
+interface flipCellInterface {
+  y: number;
+  x: number;
+  boardCopy: boolean[][]
+}
+
+function Board({ nrows, ncols, chanceLightStartsOn }: BoardPropsInterface) {
   const [board, setBoard] = useState(createBoard());
 
   /** create a board nrows high/ncols wide, each cell randomly lit or unlit */
@@ -38,7 +50,7 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
     for (let i=0; i < nrows; i++) {
       const col = [];
       for (let j=0; j < ncols; j++) {
-        col.push(randomBoolean());
+        col.push(randomBoolean(chanceLightStartsOn));
       }
       initialBoard.push(col);
     }
@@ -50,11 +62,11 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
     // TODO: check the board in state to determine whether the player has won.
   }
 
-  function flipCellsAround(coord) {
+  function flipCellsAround(coord:string) {
     setBoard(oldBoard => {
       const [y, x] = coord.split("-").map(Number);
 
-      const flipCell = (y, x, boardCopy) => {
+      const flipCell = (y:number, x:number, boardCopy: boolean[][]) => {
         // if this coord is actually on board, flip it
 
         if (x >= 0 && x < ncols && y >= 0 && y < nrows) {
@@ -63,10 +75,19 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
       };
 
       // TODO: Make a (deep) copy of the oldBoard
+      let copyBoard = JSON.parse(JSON.stringify(oldBoard));
 
       // TODO: in the copy, flip this cell and the cells around it
-
+      //call flipCell 5 times
+      flipCell(y,x,copyBoard);
+      flipCell(y-1,x,copyBoard);
+      flipCell(y+1,x,copyBoard);
+      flipCell(y,x-1,copyBoard);
+      flipCell(y,x+1,copyBoard);
+      
+      //return copyBoard
       // TODO: return the copy
+      return copyBoard;
     });
   }
 
@@ -95,8 +116,8 @@ function Board({ nrows, ncols, chanceLightStartsOn }) {
 }
 
 
-function randomBoolean() {
-  return Math.random() < 0.5;
+function randomBoolean(chanceLightStartsOn:number) {
+  return Math.random() < chanceLightStartsOn;
 }
 
 export default Board;
