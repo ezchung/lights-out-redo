@@ -105,8 +105,8 @@ function Board({ nrows, ncols, chanceLightStartsOn }: BoardPropsInterface) {
         (row, i) =>
         <tr>
           {row.map(
-            (bool, i) =>
-            <Cell flipCellsAroundMe={flipCellsAround}
+            (bool, j) =>
+            <Cell flipCellsAroundMe={() => {return flipCellsAround(`${i}-${j}`)}}
             isLit={bool}></Cell>
           )}
         </tr>)
