@@ -14,7 +14,7 @@ import "./Cell.css";
  *
  **/
 
-type flipFunction = (coord:string) => void;
+type flipFunction = (event: React.MouseEvent<HTMLTableDataCellElement>) => void;
 interface CellPropsInterface{
   flipCellsAroundMe: flipFunction;
   isLit: boolean;
